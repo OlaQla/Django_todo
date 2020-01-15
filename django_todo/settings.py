@@ -12,6 +12,12 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 import django_heroku
+import dj_database_url
+
+if os.environ.get('DEVELOPMENT'):
+    development=True
+else:
+    development=False
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -24,7 +30,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'p%)6nl@yyd2+et5bhjy@mb@gx92&@(0te^jf(03_#=*$+-ux5h'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = development
 
 ALLOWED_HOSTS = []
 
@@ -75,12 +81,16 @@ WSGI_APPLICATION = 'django_todo.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+
+if development:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
     }
-}
+else:
+    DATABASES = {'default': dj_database_url.parse("postgres://lqxvadlksfmjsc:2548ef8274cc05865099a105228c6fcea9d601c1112cf490a919141321dd3c37@ec2-54-217-206-65.eu-west-1.compute.amazonaws.com:5432/d1io6ugkebp2ec")}
 
 
 # Password validation
